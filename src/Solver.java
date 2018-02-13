@@ -46,7 +46,12 @@ public class Solver {
 
         master = new MasterProblem(n, m, h, f, k, c);
 
-        while (low < high - 1e-6) {
+        System.out.println(low + " " + high);
+        int t = 0;  // If lower and upper bounds remain unchanged after 30 iterations, stop
+        int t2 = 0;  // If upper bound remains unchanged after 100 iterations, stop
+        double prevlow = low;
+        double prevhigh = high;
+        while (low < high - 1e-6 && t < 30 && t2 < 100) {
             master.solve();
             low = master.getObj();
             x = Arrays.copyOf(master.getVariables(), m);
@@ -62,6 +67,7 @@ public class Solver {
 
             high = Math.min(high, tpt.getTotalCost());
 
+            System.out.println(low + " " + high);
             if (low < high - 1e-6) {
                 double cst = 0;
                 double[] u = tpt.getUs();
@@ -73,6 +79,8 @@ public class Solver {
                     coeff[j] = k[j]*w[j];
                 master.addD(cst, coeff);
             }
+            if (low == prevlow && high == prevhigh) t++; else t=0;
+            if (high == prevhigh) t2++; else t2=0;
         }
 
         // The exact solutions are stored in x and y

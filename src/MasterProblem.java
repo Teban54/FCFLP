@@ -74,6 +74,7 @@ public class MasterProblem {
     public void solve() throws LpSolveException {
         Solver solver = factory.get();
         Result result = solver.solve(problem);
+        // Todo: deal with null cases
         obj = result.getObjective().doubleValue();
         var = new double[m+1];
         for (int j=1; j<=m+1; j++)
